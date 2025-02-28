@@ -4,10 +4,10 @@ class XO:
         self.step = 0
 
     def check_end(self):
-        return step == 9 or self.check_winner() != '0'
+        return self.step == 9 or self.check_winner() != '0'
         
     def update_board(self, symbol, i , j):
-        step += 1
+        self.step += 1
         self.board[i][j] = symbol
     
     def check_winner(self):
@@ -31,10 +31,10 @@ class XO:
         secondry_diagonal = ''.join([self.board[0][2], self.board[1][1], self.board[2][0]])
 
         if main_diagonal == "xxx" or secondry_diagonal == "xxx" :
-            return "x"
+            return 'x'
 
         if main_diagonal == "ooo" or secondry_diagonal == "ooo" :
-            return "o"
+            return 'o'
 
         return '0'
 
@@ -42,12 +42,12 @@ class XO:
 
 xo = XO()
 xo.board = [
-    ['o','0','x'],
-    ['x','0','x'],
     ['x','0','o'],
+    ['x','0','x'],
+    ['o','x','0'],
 ]
 
-xo.update_board('x', 1, 1)
+# xo.update_board('x', 1, 1)
 print(xo.check_winner())
 print(xo.board)
 # a = ['x', 'x', 'x']
