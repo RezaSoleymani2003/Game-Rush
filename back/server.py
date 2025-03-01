@@ -13,7 +13,7 @@ async def handle_connection(websocket, path):
             
             i = index // 3
             j = index % 3 
-            xo.update_board(player, i, j)
+            xo.update_board(player.lower(), i, j)
             
             # print(i, j, flush=True)
             print(xo.board, flush=True)
