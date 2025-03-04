@@ -40,16 +40,16 @@ class XO:
 
     
 
-xo = XO()
-xo.board = [
-    ['x','x','x'],
-    ['0','o','o'],
-    ['0','0','0'],
-]
+# xo = XO()
+# xo.board = [
+#     ['x','x','x'],
+#     ['0','o','o'],
+#     ['0','0','0'],
+# ]
 
-# xo.update_board('x', 1, 1)
-print(xo.check_winner())
-print(xo.board)
-# a = ['x', 'x', 'x']
+# # xo.update_board('x', 1, 1)
+# print(xo.check_winner())
+# print(xo.board)
+# # a = ['x', 'x', 'x']
 # # a = str(a)
 # print(''.join(a))

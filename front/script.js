@@ -13,6 +13,10 @@ socket.onerror = (error) => {
     console.error("WebSocket error:", error);
 };
 
+socket.onclose = (event) => {
+    console.log("WebSocket closed:", event);
+};
+
 
 const board = document.getElementById("board");
 let currentPlayer = "X";

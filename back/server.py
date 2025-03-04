@@ -26,7 +26,7 @@ async def handle_xo(player1_ws, player2_ws):
                 await opponent_ws.send(json.dumps({"index": index, "player": player, "winner": winner}))
 
             except json.JSONDecodeError:
-                print("Received invalid JSON")
+                print("Received invalid JSON", flush=True)
 
     await asyncio.gather(
         relay_moves(player1_ws, player2_ws),
@@ -38,18 +38,22 @@ waiting_player = None
 async def handle_connection(websocket, path):
     global waiting_player
 
-    if waiting_player is None:
-        waiting_player = websocket
-        await websocket.send(json.dumps({"status": "waiting"}))
-    else:
-        player1_ws = waiting_player
-        player2_ws = websocket
-        waiting_player = None
-        
-        await player1_ws.send(json.dumps({"type": "start", "player": "X"}))
-        await player2_ws.send(json.dumps({"type": "start", "player": "O"}))
+    try:
+        if waiting_player is None:
+            waiting_player = websocket
+            await websocket.send(json.dumps({"status": "waiting"}))
+            await asyncio.Future()
+        else:
+            player1_ws = waiting_player
+            player2_ws = websocket
+            waiting_player = None
+            
+            await player1_ws.send(json.dumps({"type": "start", "player": "X"}))
+            await player2_ws.send(json.dumps({"type": "start", "player": "O"}))
 
-        await handle_xo(player1_ws, player2_ws)  # Await this function properly
+            await handle_xo(player1_ws, player2_ws)  
+    except Exception as e:
+        print(f"Connection handler failed: {e}", flush=True)
 
 start_server = websockets.serve(handle_connection, "localhost", 8765)
 
