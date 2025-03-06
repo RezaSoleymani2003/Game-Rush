@@ -23,7 +23,7 @@ async def handle_xo(player1_ws, player2_ws):
                 winner = xo.check_winner()
                 print(f"Winner Check: {winner}", flush=True)
 
-                await opponent_ws.send(json.dumps({"index": index, "player": player, "winner": winner}))
+                await opponent_ws.send(json.dumps({"index": index, "winner": winner}))
 
             except json.JSONDecodeError:
                 print("Received invalid JSON", flush=True)

@@ -15,20 +15,30 @@ socket.onmessage = (event) => {
     try {
         const data = JSON.parse(event.data);
 
-        if ("index" in data) {  
+        if("index" in data) {  
             const index = data["index"];
             myTurn = true
             updateBoard(index);
+
+            winner = data["winner"]
+
+            if(winner != "0"){
+                endGame(winner)
+            }
         }
         
         if("player init" in data){
             playerSymbol = data["player init"]
+            
             if (playerSymbol == "X"){
-                apponentSymbol == "O"
+                apponentSymbol = "O"
             }else{
-                apponentSymbol == "X"
+                apponentSymbol = "X"
             }
+
             console.log("current player: ", playerSymbol)
+            console.log("apponent: ", apponentSymbol)
+
             if(playerSymbol == "X"){
                 myTurn = true
             }
@@ -62,4 +72,8 @@ board.addEventListener("click", (e) => {
 updateBoard = (index) => {
     const cell = board.querySelector(`[data-index="${index}"]`);
     cell.textContent = apponentSymbol;
+}
+
+endGame = (winner) => {
+    
 }
