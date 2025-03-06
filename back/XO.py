@@ -12,44 +12,44 @@ class XO:
     
     def check_winner(self):
         for row in self.board:
-            if ''.join(row) == "xxx":
-                return 'x'
+            if ''.join(row) == "XXX":
+                return 'X'
             
-            if ''.join(row) == "ooo":
-                return 'o'
+            if ''.join(row) == "OOO":
+                return 'O'
 
         for i in range(3):
             col = [self.board[0][i], self.board[1][i], self.board[2][i]]   
 
-            if ''.join(col) == "xxx":
-                return 'x'
+            if ''.join(col) == "XXX":
+                return 'X'
             
-            if ''.join(col) == "ooo":
-                return 'o' 
+            if ''.join(col) == "OOO":
+                return 'O' 
 
         main_diagonal = ''.join([self.board[0][0], self.board[1][1], self.board[2][2]])
         secondry_diagonal = ''.join([self.board[0][2], self.board[1][1], self.board[2][0]])
 
-        if main_diagonal == "xxx" or secondry_diagonal == "xxx" :
-            return 'x'
+        if main_diagonal == "XXX" or secondry_diagonal == "XXX" :
+            return 'X'
 
-        if main_diagonal == "ooo" or secondry_diagonal == "ooo" :
-            return 'o'
+        if main_diagonal == "OOO" or secondry_diagonal == "OOO" :
+            return 'O'
 
         return '0'
 
     
 
-# xo = XO()
-# xo.board = [
-#     ['x','x','x'],
-#     ['0','o','o'],
+# Xo = XO()
+# Xo.board = [
+#     ['X','X','X'],
+#     ['0','O','O'],
 #     ['0','0','0'],
 # ]
 
-# # xo.update_board('x', 1, 1)
-# print(xo.check_winner())
-# print(xo.board)
-# # a = ['x', 'x', 'x']
+# # Xo.update_board('X', 1, 1)
+# print(Xo.check_winner())
+# print(Xo.board)
+# # a = ['X', 'X', 'X']
 # # a = str(a)
 # print(''.join(a))

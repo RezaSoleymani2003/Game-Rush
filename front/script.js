@@ -1,4 +1,8 @@
 const socket = new WebSocket("ws://localhost:8765");
+let playerSymbol = null;
+let apponentSymbol = null;
+const board = document.getElementById("board");
+let myTurn = false
 
 socket.onopen = () => {
     console.log("Connected to server");
@@ -7,7 +11,35 @@ socket.onopen = () => {
 
 socket.onmessage = (event) => {
     console.log("Received:", event.data);
+    
+    try {
+        const data = JSON.parse(event.data);
+
+        if ("index" in data) {  
+            const index = data["index"];
+            myTurn = true
+            updateBoard(index);
+        }
+        
+        if("player init" in data){
+            playerSymbol = data["player init"]
+            if (playerSymbol == "X"){
+                apponentSymbol == "O"
+            }else{
+                apponentSymbol == "X"
+            }
+            console.log("current player: ", playerSymbol)
+            if(playerSymbol == "X"){
+                myTurn = true
+            }
+        }
+
+
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
+    }
 };
+
 
 socket.onerror = (error) => {
     console.error("WebSocket error:", error);
@@ -17,19 +49,17 @@ socket.onclose = (event) => {
     console.log("WebSocket closed:", event);
 };
 
-
-const board = document.getElementById("board");
-let currentPlayer = "X";
-
 board.addEventListener("click", (e) => {
-    if (e.target.classList.contains("cell") && e.target.textContent === "") {
-        e.target.textContent = currentPlayer;
-        
+    if (myTurn && e.target.classList.contains("cell") && e.target.textContent === "") {
+        e.target.textContent = playerSymbol;
         const index = e.target.dataset.index;  
-        const data = JSON.stringify({ index: index, player: currentPlayer });
-
-        socket.send(data); 
-        
-        currentPlayer = currentPlayer === "X" ? "O" : "X";  
+        const data = JSON.stringify({ index: index, player: playerSymbol });
+        socket.send(data);    
+        myTurn = false
     }
 });
+
+updateBoard = (index) => {
+    const cell = board.querySelector(`[data-index="${index}"]`);
+    cell.textContent = apponentSymbol;
+}

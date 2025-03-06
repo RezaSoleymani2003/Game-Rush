@@ -16,7 +16,7 @@ async def handle_xo(player1_ws, player2_ws):
                 
                 i = index // 3
                 j = index % 3 
-                xo.update_board(player.lower(), i, j)
+                xo.update_board(player, i, j)
                 
                 print(xo.board, flush=True)
 
@@ -48,8 +48,8 @@ async def handle_connection(websocket, path):
             player2_ws = websocket
             waiting_player = None
             
-            await player1_ws.send(json.dumps({"type": "start", "player": "X"}))
-            await player2_ws.send(json.dumps({"type": "start", "player": "O"}))
+            await player1_ws.send(json.dumps({"player init": "X"}))
+            await player2_ws.send(json.dumps({"player init": "O"}))
 
             await handle_xo(player1_ws, player2_ws)  
     except Exception as e:
