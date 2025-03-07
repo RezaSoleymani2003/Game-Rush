@@ -3,6 +3,8 @@ let playerSymbol = null;
 let apponentSymbol = null;
 const board = document.getElementById("board");
 let myTurn = false
+const popup = document.getElementById("popup");
+// popup.style.display = "none"
 
 socket.onopen = () => {
     console.log("Connected to server");
@@ -21,10 +23,9 @@ socket.onmessage = (event) => {
             updateBoard(index);
 
             winner = data["winner"]
+            endGame(winner)
+            console.log(popup);
 
-            if(winner != "0"){
-                endGame(winner)
-            }
         }
         
         if("player init" in data){
@@ -69,11 +70,26 @@ board.addEventListener("click", (e) => {
     }
 });
 
-updateBoard = (index) => {
+const updateBoard = (index) => {
     const cell = board.querySelector(`[data-index="${index}"]`);
     cell.textContent = apponentSymbol;
 }
 
-endGame = (winner) => {
+const endGame = (winner) => {
     
+    const endGame = (winner) => {
+        console.log("Winner:", winner); 
+    
+        if (winner === "X" || winner === "O") {
+            popup.style.display = "block"; // Show popup
+        } else {
+            popup.style.display = "none"; // Hide popup
+        }
+    };
+
+}
+
+const closePopup = () => {
+    popup.style.display = "none";
+    location.reload();
 }

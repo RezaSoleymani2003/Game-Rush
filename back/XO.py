@@ -39,7 +39,6 @@ class XO:
         return '0'
 
     
-
 # Xo = XO()
 # Xo.board = [
 #     ['X','X','X'],
