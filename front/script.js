@@ -1,10 +1,10 @@
 const socket = new WebSocket("ws://localhost:8765");
+const board = document.getElementById("board");
+const popup = document.getElementById("popup");
+
 let playerSymbol = null;
 let apponentSymbol = null;
-const board = document.getElementById("board");
 let myTurn = false
-const popup = document.getElementById("popup");
-// popup.style.display = "none"
 
 socket.onopen = () => {
     console.log("Connected to server");
@@ -17,17 +17,17 @@ socket.onmessage = (event) => {
     try {
         const data = JSON.parse(event.data);
 
+        if("winner" in data){
+            winner = data["winner"]            
+            finishGame(winner)
+        }
+        
         if("index" in data) {  
             const index = data["index"];
             myTurn = true
             updateBoard(index);
-
-            winner = data["winner"]
-            endGame(winner)
-            console.log(popup);
-
         }
-        
+
         if("player init" in data){
             playerSymbol = data["player init"]
             
@@ -75,19 +75,17 @@ const updateBoard = (index) => {
     cell.textContent = apponentSymbol;
 }
 
-const endGame = (winner) => {
-    
-    const endGame = (winner) => {
-        console.log("Winner:", winner); 
-    
-        if (winner === "X" || winner === "O") {
-            popup.style.display = "block"; // Show popup
-        } else {
-            popup.style.display = "none"; // Hide popup
-        }
-    };
+const finishGame = (winner) => {
+    console.log("Winner:", winner); 
 
-}
+    if (winner == "X" || winner == "O") {
+        document.getElementById("popup").style.display = "block"; 
+        document.getElementById("popup-text").textContent = `Player ${winner} wins!`; 
+    } else {
+        document.getElementById("popup").style.display = "none"; 
+    }
+};
+
 
 const closePopup = () => {
     popup.style.display = "none";

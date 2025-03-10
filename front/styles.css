@@ -25,16 +25,15 @@ body {
 }
 
 .popup {
-    /* display: none; */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
+    background: rgb(199, 173, 173);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    display: none;
     text-align: center;
     width: 300px;
 }

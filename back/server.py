@@ -5,8 +5,13 @@ from XO import XO
 
 async def handle_xo(player1_ws, player2_ws):
     xo = XO()
-    players = {player1_ws: "X", player2_ws: "O"}
     
+    async def send_winner():
+        winner = xo.check_winner()
+        if winner != '0':
+            await player1_ws.send(json.dumps({"winner": winner}))
+            await player2_ws.send(json.dumps({"winner": winner}))
+
     async def relay_moves(player_ws, opponent_ws):
         async for message in player_ws:
             try:
@@ -20,10 +25,9 @@ async def handle_xo(player1_ws, player2_ws):
                 
                 print(xo.board, flush=True)
 
-                winner = xo.check_winner()
-                print(f"Winner Check: {winner}", flush=True)
 
-                await opponent_ws.send(json.dumps({"index": index, "winner": winner}))
+                await opponent_ws.send(json.dumps({"index": index}))
+                await send_winner()
 
             except json.JSONDecodeError:
                 print("Received invalid JSON", flush=True)
