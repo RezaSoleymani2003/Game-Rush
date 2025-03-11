@@ -1,13 +1,13 @@
 import asyncio
 import websockets
 import json
-from XO import XO 
+from games.XO import XO , XO_bot
 
 async def handle_xo(player1_ws, player2_ws):
     xo = XO()
     
     async def send_winner():
-        winner = xo.check_winner()
+        winner = XO.check_winner(xo.board)
         if winner != '0':
             await player1_ws.send(json.dumps({"winner": winner}))
             await player2_ws.send(json.dumps({"winner": winner}))
