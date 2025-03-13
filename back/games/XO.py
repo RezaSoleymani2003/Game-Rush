@@ -120,25 +120,23 @@ class XO_bot:
         
 
 
+# xo = XO()
+# xo.board = [
+#     ['O','O','X'],
+#     ['X','O','O'],
+#     ['0','0','X'],
+# ]
 
+# bot = XO_bot("minimax", xo, 'O')
 
-xo = XO()
-xo.board = [
-    ['O','O','X'],
-    ['X','O','O'],
-    ['0','0','X'],
-]
+# # Xo.update_board('X', 1, 1)
+# # print(xo.check_winner())
+# print(xo.board)
+# print()
+# bot.make_move()
 
-bot = XO_bot("minimax", xo, 'O')
+# print(xo.board)
 
-# Xo.update_board('X', 1, 1)
-# print(xo.check_winner())
-print(xo.board)
-print()
-bot.make_move()
-
-print(xo.board)
-
-# a = ['X', 'X', 'X']
-# a = str(a)
-# print(''.join(a))
+# # a = ['X', 'X', 'X']
+# # a = str(a)
+# # print(''.join(a))

@@ -1,6 +1,9 @@
 const socket = new WebSocket("ws://localhost:8765");
 const board = document.getElementById("board");
 const popup = document.getElementById("popup");
+const mode = document.getElementById("mode");
+const game = document.getElementById("game");
+
 
 let playerSymbol = null;
 let apponentSymbol = null;
@@ -8,7 +11,7 @@ let myTurn = false
 
 socket.onopen = () => {
     console.log("Connected to server");
-    socket.send("Hello Server!");
+    // socket.send("Hello Server!");
 };
 
 socket.onmessage = (event) => {
@@ -90,4 +93,23 @@ const finishGame = (winner) => {
 const closePopup = () => {
     popup.style.display = "none";
     location.reload();
+}
+
+const AIMode = () => {
+    game.style.display = "block"
+    mode.style.display = "none"
+    console.log("chose ai")
+
+    const data = JSON.stringify({ mode: "ai mode" });
+    socket.send(data);
+
+}
+
+const playerMode = () => {
+    game.style.display = "block"
+    mode.style.display = "none"
+    console.log("chose player")
+    
+    const data = JSON.stringify({ mode: "player mode" });
+    socket.send(data);
 }
