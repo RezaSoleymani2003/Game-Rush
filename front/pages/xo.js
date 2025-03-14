@@ -3,6 +3,8 @@ const board = document.getElementById("board");
 const popup = document.getElementById("popup");
 const mode = document.getElementById("mode");
 const game = document.getElementById("game");
+const difficulty = document.getElementById("difficulty");
+
 
 
 let playerSymbol = null;
@@ -96,13 +98,13 @@ const closePopup = () => {
 }
 
 const AIMode = () => {
-    game.style.display = "block"
     mode.style.display = "none"
     console.log("chose ai")
 
     const data = JSON.stringify({ mode: "ai mode" });
     socket.send(data);
 
+    difficulty.style.display = "block"
 }
 
 const playerMode = () => {
@@ -112,4 +114,16 @@ const playerMode = () => {
     
     const data = JSON.stringify({ mode: "player mode" });
     socket.send(data);
+}
+
+const setDifficulty = (level, event) => {
+    event.preventDefault();
+
+    const data = JSON.stringify({ level: level });
+    socket.send(data);
+    
+    console.log(level)
+    
+    game.style.display = "block"
+    difficulty.style.display = "none"
 }

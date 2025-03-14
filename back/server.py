@@ -4,7 +4,70 @@ import json
 from games.XO import XO , XO_bot
 
 async def handle_xo_ai_mode(player_ws):
-    pass
+    mapper = {"easy": "random", "medium": "rule based", "hard": "minimax"}
+    xo = XO()
+    bot = None
+    await player_ws.send(json.dumps({"player init": "X"}))
+    
+    try:
+        async for message in player_ws:
+            try:
+                data = json.loads(message)
+
+                if "level" in data:
+                    level = data["level"]
+                    bot = XO_bot(mapper[level], xo, "O")
+                    print(f"Bot initialized with difficulty: {level}", flush=True)
+
+                elif "index" in data:
+                    if bot is None:
+                        print("Error: Bot not initialized before receiving moves", flush=True)
+                        continue  
+
+                    index = int(data["index"])
+                    player = data["player"]
+
+                    i = index // 3
+                    j = index % 3
+                    xo.update_board(player, i, j)
+
+                    print("Player Move:", xo.board, flush=True)
+
+                    winner = XO.check_winner(xo.board)
+                    
+                    if winner != '0':
+                         await player_ws.send(json.dumps({"winner": winner}))
+                    
+                    else:
+
+                        # AI makes a move
+                        bot_move = bot.make_move()
+                        xo.update_board("O", bot_move[0], bot_move[1])
+
+                        print("Bot Move:", xo.board, flush=True)
+                        
+                        winner = XO.check_winner(xo.board)
+                    
+                        if winner != '0':
+                            await player_ws.send(json.dumps({"winner": winner}))
+
+                        else:
+                            if player_ws.open:
+                                await player_ws.send(json.dumps({"index": bot_move[0] * 3 + bot_move[1], "player": "O"}))
+                            else:
+                                print("Client disconnected, stopping AI mode", flush=True)
+                                break  
+
+            except json.JSONDecodeError:
+                print("Received invalid JSON", flush=True)
+            except websockets.exceptions.ConnectionClosed as e:
+                print(f"Connection closed: {e.code} ({e.reason})", flush=True)
+                break  
+
+    except Exception as e:
+        print(f"Unexpected error: {e}", flush=True)
+
+
 
 async def handle_xo_player_mode(player1_ws, player2_ws):
     xo = XO()
@@ -61,6 +124,8 @@ async def handle_connection(websocket, path):
             if mode == "ai mode":
                 print("AI Mode selected, starting AI game...", flush=True)
                 await handle_xo_ai_mode(waiting_player) 
+                waiting_player = None
+                await asyncio.Future()  
             else:
                 await asyncio.Future()  
 
