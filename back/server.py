@@ -37,8 +37,8 @@ async def handle_xo_ai_mode(player_ws):
                     winner = XO.check_winner(xo.board)
                     
                     if winner != '0':
-                         await player_ws.send(json.dumps({"winner": winner}))
-                    
+                        await player_ws.send(json.dumps({"winner": winner}))
+
                     else:
                         bot_move = bot.make_move()
                         xo.update_board("O", bot_move[0], bot_move[1])

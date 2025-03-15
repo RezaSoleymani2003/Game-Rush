@@ -39,9 +39,6 @@ class XO:
         if main_diagonal == "OOO" or secondry_diagonal == "OOO" :
             return 'O'
 
-        if self.step == 0:
-            return '0'
-            
         return '0'
 
 class XO_bot:

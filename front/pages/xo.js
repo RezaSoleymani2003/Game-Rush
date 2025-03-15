@@ -68,10 +68,15 @@ socket.onclose = (event) => {
 board.addEventListener("click", (e) => {
     if (myTurn && e.target.classList.contains("cell") && e.target.textContent === "") {
         e.target.textContent = playerSymbol;
+
         const index = e.target.dataset.index;  
         const data = JSON.stringify({ index: index, player: playerSymbol });
         socket.send(data);    
         myTurn = false
+        if (checkDraw()){
+            popup.style.display = "block"; 
+            document.getElementById("popup-text").textContent = `It's A Draw!`;
+        }
     }
 });
 
@@ -84,13 +89,13 @@ const finishGame = (winner) => {
     console.log("Winner:", winner); 
 
     if (winner == "X" || winner == "O") {
-        document.getElementById("popup").style.display = "block"; 
-        document.getElementById("popup-text").textContent = `Player ${winner} wins!`; 
-    } else {
-        document.getElementById("popup").style.display = "none"; 
+        popup.style.display = "block"; 
+        document.getElementById("popup-text").textContent = `Player ${winner} Wins!`; 
+    }
+    else {
+        popup.style.display = "none"; 
     }
 };
-
 
 const closePopup = () => {
     popup.style.display = "none";
@@ -127,3 +132,8 @@ const setDifficulty = (level, event) => {
     game.style.display = "block"
     difficulty.style.display = "none"
 }
+
+const checkDraw = () => {
+    const cells = document.querySelectorAll(".cell");
+    return !Array.from(cells).some(cell => cell.textContent.trim() === "");
+};
