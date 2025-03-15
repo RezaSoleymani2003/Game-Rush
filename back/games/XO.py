@@ -39,6 +39,9 @@ class XO:
         if main_diagonal == "OOO" or secondry_diagonal == "OOO" :
             return 'O'
 
+        if self.step == 0:
+            return '0'
+            
         return '0'
 
 class XO_bot:
@@ -67,7 +70,7 @@ class XO_bot:
             move = self.rule_based() 
 
         if self.level == "minimax":
-            move = self.minimax(self.xo_game.board, self.symbol)
+            move = self.minimax(self.xo_game.board)
 
         self.xo_game.board[move[0]][move[1]] = self.symbol
         return move
@@ -87,7 +90,6 @@ class XO_bot:
     def rule_based(self):
         empty_indexes = XO_bot.get_empty_indexes(self.xo_game.board)
 
-
         for index in empty_indexes:
             board_copy = copy.deepcopy(self.xo_game.board)
             board_copy[index[0]][index[1]] = self.apponent_symbol
@@ -102,29 +104,60 @@ class XO_bot:
         
 
 
-    def minimax(self, board, symbol):
+    def get_best_score(self, board, symbol):
+        winner = XO.check_winner(board)
+
+        if winner == self.symbol:  
+            return 1
+        elif winner == self.apponent_symbol:  
+            return -1
+        elif not XO_bot.get_empty_indexes(board):  
+            return 0
+
         empty_indexes = XO_bot.get_empty_indexes(board)
-        viewed = {index: False for index in empty_indexes}
 
-        for index in viewed.keys():
-            if not viewed[index]:
+        if symbol == self.symbol:
+            best_score = -float("inf")
+            for index in empty_indexes:
                 board_copy = copy.deepcopy(board)
-                board_copy[index[0]][index[1]] = symbol
-                viewed[index] = True
+                board_copy[index[0]][index[1]] = symbol  
 
-                new_symbol = "X" if symbol == "O" else "X"
+                score = self.get_best_score(board_copy, "X" if symbol == "O" else "O")
+                best_score = max(best_score, score)  
+            
+            return best_score
 
-                if XO.check_winner(board_copy) == self.symbol:
-                    return index
-                self.minimax(board_copy, new_symbol)
-        
+        else:
+            best_score = float("inf")
+            for index in empty_indexes:
+                board_copy = copy.deepcopy(board)
+                board_copy[index[0]][index[1]] = symbol  
+                score = self.get_best_score(board_copy, "X" if symbol == "O" else "O")
+                best_score = min(best_score, score)  
+            
+            return best_score
 
+    def minimax(self, board):
+        best_score = -float("inf")
+        best_move = None
+
+        for index in XO_bot.get_empty_indexes(board):
+            board_copy = copy.deepcopy(board)
+            board_copy[index[0]][index[1]] = self.symbol 
+
+            score = self.get_best_score(board_copy, self.apponent_symbol)
+
+            if score > best_score:
+                best_score = score
+                best_move = index
+        # print(f"minimax best score : {best_score}")
+        return best_move
 
 # xo = XO()
 # xo.board = [
 #     ['O','O','X'],
 #     ['X','O','O'],
-#     ['0','0','X'],
+#     ['0','X','X'],
 # ]
 
 # bot = XO_bot("minimax", xo, 'O')
@@ -133,10 +166,10 @@ class XO_bot:
 # # print(xo.check_winner())
 # print(xo.board)
 # print()
-# bot.make_move()
-
+# move = bot.make_move()
+# print(move)
 # print(xo.board)
 
-# # a = ['X', 'X', 'X']
-# # a = str(a)
-# # print(''.join(a))
+# a = ['X', 'X', 'X']
+# a = str(a)
+# print(''.join(a))

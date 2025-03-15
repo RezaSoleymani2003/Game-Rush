@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import time
 from games.XO import XO , XO_bot
 
 async def handle_xo_ai_mode(player_ws):
@@ -39,17 +40,16 @@ async def handle_xo_ai_mode(player_ws):
                          await player_ws.send(json.dumps({"winner": winner}))
                     
                     else:
-
-                        # AI makes a move
                         bot_move = bot.make_move()
                         xo.update_board("O", bot_move[0], bot_move[1])
 
                         print("Bot Move:", xo.board, flush=True)
-                        
+                        time.sleep(0.1) 
                         winner = XO.check_winner(xo.board)
                     
                         if winner != '0':
                             await player_ws.send(json.dumps({"winner": winner}))
+                            await player_ws.send(json.dumps({"index": bot_move[0] * 3 + bot_move[1], "player": "O"}))
 
                         else:
                             if player_ws.open:
