@@ -76,6 +76,7 @@ board.addEventListener("click", (e) => {
         if (checkDraw()){
             popup.style.display = "block"; 
             document.getElementById("popup-text").textContent = `It's A Draw!`;
+            board.classList.add("disabled");
         }
     }
 });
@@ -91,6 +92,7 @@ const finishGame = (winner) => {
     if (winner == "X" || winner == "O") {
         popup.style.display = "block"; 
         document.getElementById("popup-text").textContent = `Player ${winner} Wins!`; 
+        board.classList.add("disabled");
     }
     else {
         popup.style.display = "none"; 

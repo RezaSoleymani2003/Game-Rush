@@ -67,8 +67,6 @@ async def handle_xo_ai_mode(player_ws):
     except Exception as e:
         print(f"Unexpected error: {e}", flush=True)
 
-
-
 async def handle_xo_player_mode(player1_ws, player2_ws):
     xo = XO()
     
@@ -148,7 +146,7 @@ async def handle_connection(websocket, path):
     except Exception as e:
         print(f"Connection handler failed: {e}", flush=True)
 
-start_server = websockets.serve(handle_connection, "localhost", 8765)
+start_server = websockets.serve(handle_connection, "http://rezasoleymani2003.github.io/Game-Rush/", 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
