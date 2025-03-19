@@ -146,7 +146,9 @@ async def handle_connection(websocket, path):
     except Exception as e:
         print(f"Connection handler failed: {e}", flush=True)
 
-start_server = websockets.serve(handle_connection, "0.0.0.0", 8765)
+PORT = int(os.getenv("PORT", 443))
+
+start_server = websockets.serve(handle_connection, "0.0.0.0", PORT)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
