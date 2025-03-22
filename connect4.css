@@ -1,0 +1,86 @@
+body { 
+    text-align: center; 
+    font-family: Arial, sans-serif; 
+    background-color: rgb(251, 247, 241);
+}
+    
+.board { 
+    display: grid; 
+    grid-template-columns: repeat(7, 100px); 
+    gap: 5px; 
+    margin: 20px auto; 
+    width: 320px; 
+    /* background: blue; */
+}
+
+.cell { 
+    width: 100px; 
+    height: 100px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;      
+    font-size: 2em; 
+    background: rgb(126, 124, 255); 
+    cursor: pointer; 
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(199, 173, 173);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 300px;
+}
+
+.popup button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background: #007BFF;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.popup button:hover {
+    background: #0056b3;
+}
+
+.modeButton {
+    color: rgb(36, 30, 40);
+    background-color: rgb(30, 33, 210);
+    border-radius: 20%;
+    width: 200px;
+    height: 200px;
+    font-size: xx-large;
+    border: 0px;
+}
+
+.game {
+    display: none;
+}
+
+.difficulty{
+    display: none;
+}
+
+.difficultyButton{
+    color: rgb(38, 181, 124);
+    background-color: rgb(30, 33, 210);
+    border-radius: 20%;
+    width: 100px;
+    height: 50px;
+    font-size: large;
+    border: 0px;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="connect4.css">
+</head>
+
+<body>
+    <div>
+        <div class="mode" id="mode">
+            <h1>Choose Mode : </h1>
+            <button onclick="playerMode()" class="modeButton"> vs Player</button>
+            <button onclick="AIMode()" class="modeButton"> vs AI</button>
+        </div>
+
+        <div class="difficulty" id="difficulty">
+            <h1>Choose Difficulty : </h1>
+            <form>
+                <button onclick="setDifficulty('easy', event)" class="difficultyButton">Easy</button>
+                <button onclick="setDifficulty('medium', event)" class="difficultyButton">Medium</button>
+                <button onclick="setDifficulty('hard', event)" class="difficultyButton">Hard</button>
+
+            </form>
+            
+        </div>        
+
+        <div class="popup" id="popup">
+            <p id="popup-text">This ishuiiiiiiiiiiiiiiiiiiiiiii a customizable pop-up message!</p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+        
+        
+        <div class="game" id="game">
+
+            <h1>Connect 4</h1>
+            <div class="board" id="board"></div>
+        </div>
+
+        <script src="connect4.js"></script>
+    </div>
+</body>
+</html>
