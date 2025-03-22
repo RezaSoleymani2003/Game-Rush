@@ -1,8 +1,11 @@
 import asyncio
 import websockets
 import json
+import os
 import time
-from games.XO import XO , XO_bot
+from games.XO import XO, XO_bot
+
+PORT = int(os.getenv("PORT", 8765))  
 
 async def handle_xo_ai_mode(player_ws):
     mapper = {"easy": "random", "medium": "rule based", "hard": "minimax"}
@@ -89,7 +92,6 @@ async def handle_xo_player_mode(player1_ws, player2_ws):
                 
                 print(xo.board, flush=True)
 
-
                 await opponent_ws.send(json.dumps({"index": index}))
                 await send_winner()
 
@@ -102,7 +104,6 @@ async def handle_xo_player_mode(player1_ws, player2_ws):
     )
 
 waiting_player = None
-
 
 async def handle_connection(websocket, path):
     global waiting_player
@@ -146,7 +147,7 @@ async def handle_connection(websocket, path):
     except Exception as e:
         print(f"Connection handler failed: {e}", flush=True)
 
-start_server = websockets.serve(handle_connection, "0.0.0.0", 8765)
+start_server = websockets.serve(handle_connection, "0.0.0.0", PORT)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
