@@ -1,4 +1,6 @@
-const socket = new WebSocket("wss://game-rush-production.up.railway.app");
+// const socket = new WebSocket("wss://game-rush-production.up.railway.app");
+const socket = new WebSocket("ws://192.168.1.37:8765")
+
 const board = document.getElementById("board");
 const popup = document.getElementById("popup");
 const mode = document.getElementById("mode");
