@@ -192,9 +192,9 @@ class Connect4_bot:
         
         if winner == self.symbol:  
             return 100
-        elif winner == self.apponent_symbol:  # Opponent wins
+        elif winner == self.apponent_symbol:  
             return -100
-        elif not Connect4_bot.get_empty_indexes(board):  # Draw
+        elif not Connect4_bot.get_empty_indexes(board):
             return 0
         elif depth == 0:  
             return self.evaluate_board(board)

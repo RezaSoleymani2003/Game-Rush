@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div>
+    <div class="parent">
         <div class="mode" id="mode">
             <h1>Choose Mode : </h1>
             <button onclick="playerMode()" class="modeButton"> vs Player</button>
@@ -27,13 +27,12 @@
         </div>        
 
         <div class="popup" id="popup">
-            <p id="popup-text">This ishuiiiiiiiiiiiiiiiiiiiiiii a customizable pop-up message!</p>
+            <p id="popup-text"></p>
             <button onclick="closePopup()">OK</button>
         </div>
         
         
         <div class="game" id="game">
-
             <h1>Connect 4</h1>
             <div class="board" id="board"></div>
         </div>

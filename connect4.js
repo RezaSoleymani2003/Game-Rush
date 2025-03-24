@@ -13,6 +13,7 @@ let playerSymbol = null;
 let apponentSymbol = null;
 let myTurn = false
 
+const color = {"X" : "green", "O" : "red"};
 
 document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < 42; i++) {
@@ -81,12 +82,13 @@ socket.onclose = (event) => {
 
 board.addEventListener("click", (e) => {
     if (myTurn && e.target.classList.contains("cell") && e.target.textContent === "") {
-        e.target.textContent = playerSymbol;
+        e.target.style.backgroundColor = color[playerSymbol];
 
         const index = e.target.dataset.index;  
         const data = JSON.stringify({ index: index, player: playerSymbol });
         socket.send(data);    
         myTurn = false
+        
         if (checkDraw()){
             popup.style.display = "block"; 
             document.getElementById("popup-text").textContent = `It's A Draw!`;
@@ -97,7 +99,8 @@ board.addEventListener("click", (e) => {
 
 const updateBoard = (index) => {
     const cell = board.querySelector(`[data-index="${index}"]`);
-    cell.textContent = apponentSymbol;
+    cell.style.backgroundColor = color[apponentSymbol];
+
 }
 
 const finishGame = (winner) => {
@@ -105,7 +108,7 @@ const finishGame = (winner) => {
 
     if (winner == "X" || winner == "O") {
         popup.style.display = "block"; 
-        document.getElementById("popup-text").textContent = `Player ${winner} Wins!`; 
+        document.getElementById("popup-text").textContent = `Player ${color[winner].toUpperCase()} Wins!`; 
         board.classList.add("disabled");
     }
     else {

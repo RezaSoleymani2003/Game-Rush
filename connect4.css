@@ -1,86 +1,110 @@
-body { 
-    text-align: center; 
-    font-family: Arial, sans-serif; 
-    background-color: rgb(251, 247, 241);
-}
-    
-.board { 
-    display: grid; 
-    grid-template-columns: repeat(7, 100px); 
-    gap: 5px; 
-    margin: 20px auto; 
-    width: 320px; 
-    /* background: blue; */
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2e;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-.cell { 
-    width: 100px; 
-    height: 100px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;      
-    font-size: 2em; 
-    background: rgb(126, 124, 255); 
-    cursor: pointer; 
+/* Parent container */
+.parent {
+    width: 90%;
+    max-width: 600px;
 }
 
-.popup {
-    display: none;
-    position: fixed;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgb(199, 173, 173);
+/* Mode Selection */
+.mode, .difficulty, .game {
+    background: #282a36;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    width: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
 }
 
-.popup button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border: none;
-    background: #007BFF;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.popup button:hover {
-    background: #0056b3;
-}
-
-.modeButton {
-    color: rgb(36, 30, 40);
-    background-color: rgb(30, 33, 210);
-    border-radius: 20%;
-    width: 200px;
-    height: 200px;
-    font-size: xx-large;
-    border: 0px;
-}
-
-.game {
+.game{
     display: none;
 }
 
 .difficulty{
     display: none;
 }
-
-.difficultyButton{
-    color: rgb(38, 181, 124);
-    background-color: rgb(30, 33, 210);
-    border-radius: 20%;
-    width: 100px;
-    height: 50px;
-    font-size: large;
-    border: 0px;
+h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
 }
 
-.disabled {
-    pointer-events: none;
-    opacity: 0.5;
+/* Buttons */
+button {
+    background-color: #ff7b00;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #ff5500;
+}
+
+.modeButton, .difficultyButton {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    width: 300px;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.popup button {
+    margin-top: 10px;
+    background: #ff5555;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* ✅ Use flexible columns */
+    gap: 5px; /* Adjust spacing */
+    background: #444;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 90%; /* ✅ Make board responsive */
+    max-width: 500px; /* Optional: Limit max size */
+}
+
+/* Ensure all cells take equal space */
+.cell {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* ✅ Keep squares */
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.board div:hover {
+    background: lightgray;
 }
