@@ -47,9 +47,11 @@ class Connect4:
                     return val
               
         return "0"
+    
+    
 
 class Connect4_bot:
-    def __init__(self, level, connect4_game, symbol, max_depth=5):
+    def __init__(self, level, connect4_game, symbol, max_depth=3):
         self.level = level
         self.connect4_game = connect4_game
         self.symbol = symbol
@@ -144,9 +146,49 @@ class Connect4_bot:
         print(f"random : {random_index}")
         return random_index
         
+    def evaluate_board(self, board):
+        score = 0
+        def score_line(line):
+            nonlocal score
+            line_str = "".join(line)
+            
+            if "XXXX" in line_str:  
+                return 100
+            elif "OOOO" in line_str:  
+                return -100
+            elif "XXX0" in line_str or "0XXX" in line_str or "X0XX" in line_str or "XX0X" in line_str:
+                score += 10  
+            elif "OOO0" in line_str or "0OOO" in line_str or "O0OO" in line_str or "OO0O" in line_str:
+                score -= 10  
+            elif "XX00" in line_str or "00XX" in line_str or "X00X" in line_str:
+                score += 5
+            elif "OO00" in line_str or "00OO" in line_str or "O00O" in line_str:
+                score -= 5
+        
+        for row in board:
+            for i in range(4):
+                score_line(row[i:i+4])
+        
+        for col in range(7):
+            for row in range(3):
+                score_line([board[row + i][col] for i in range(4)])
+        
+        for row in range(3):
+            for col in range(4):
+                score_line([board[row + i][col + i] for i in range(4)])
+
+        for row in range(3):
+            for col in range(3, 7):
+                score_line([board[row + i][col - i] for i in range(4)])
+
+        center_column = [board[row][3] for row in range(6)]
+        score += center_column.count(self.symbol) * 3
+        score -= center_column.count(self.apponent_symbol) * 3
+        
+        return score
 
     def get_best_score(self, board, symbol, alpha, beta, depth):
-        winner = self.check_winner(board)
+        winner = Connect4.check_winner(board)
         
         if winner == self.symbol:  
             return 100
@@ -154,12 +196,12 @@ class Connect4_bot:
             return -100
         elif not Connect4_bot.get_empty_indexes(board):  # Draw
             return 0
-        elif depth == 0:  # Stop recursion at max depth and return evaluation score
+        elif depth == 0:  
             return self.evaluate_board(board)
 
         empty_indexes = Connect4_bot.get_empty_indexes(board)
 
-        if symbol == self.symbol:  # Maximizing player (AI)
+        if symbol == self.symbol: 
             best_score = -float("inf")
             for index in empty_indexes:
                 board_copy = copy.deepcopy(board)
@@ -169,12 +211,12 @@ class Connect4_bot:
                 best_score = max(best_score, score)
                 alpha = max(alpha, best_score)
 
-                if beta <= alpha:  # Prune
+                if beta <= alpha:  
                     break
 
             return best_score
 
-        else:  # Minimizing player (Opponent)
+        else: 
             best_score = float("inf")
             for index in empty_indexes:
                 board_copy = copy.deepcopy(board)
@@ -204,7 +246,6 @@ class Connect4_bot:
                 best_move = index
 
         return best_move
-
 
 
 connect4 = Connect4()
