@@ -3,10 +3,10 @@ import websockets
 import json
 import os
 import time
-from connect4 import Connect4, Connect4_bot
+from connect4 import *
 
 async def handle_connect4_ai_mode(player_ws):
-    mapper = {"easy": "random", "medium": "rule based", "hard": "minimax"}
+    mapper = {"easy": "random", "medium": "rule based", "hard": "rl"}
     connect4 = Connect4()
     bot = None
     await player_ws.send(json.dumps({"player init": "X"}))
@@ -18,7 +18,9 @@ async def handle_connect4_ai_mode(player_ws):
 
                 if "level" in data:
                     level = data["level"]
-                    bot = Connect4_bot(mapper[level], connect4, "O")
+
+                    bot = Connect4_bot.create_bot(mapper[level], connect4, "O")
+                    # print(bot.symbol)
                     print(f"Bot initialized with difficulty: {level}", flush=True)
 
                 elif "index" in data:
@@ -32,21 +34,23 @@ async def handle_connect4_ai_mode(player_ws):
                     i = index // 7
                     j = index % 7
                     connect4.update_board(player, i, j)
+                    # print("Player Move:", connect4.board, flush=True)
 
-                    print("Player Move:", connect4.board, flush=True)
-
-                    winner = Connect4.check_winner(connect4.board)
+                    # print("here", flush=True)
+                    # winner = Connect4.check_winner(connect4.board)
+                    winner = connect4.check_winner()
                     
                     if winner != '0':
                         await player_ws.send(json.dumps({"winner": winner}))
 
                     else:
                         bot_move = bot.make_move()
-                        connect4.update_board("O", bot_move[0], bot_move[1])
+                        # print("here")
+                        bot.update_board(bot_move)
 
-                        print("Bot Move:", connect4.board, flush=True)
+                        print("Bot Move:", bot.connect4_game.board, flush=True)
                         time.sleep(0.1) 
-                        winner = Connect4.check_winner(connect4.board)
+                        winner = connect4.check_winner()
                     
                         if winner != '0':
                             await player_ws.send(json.dumps({"winner": winner}))

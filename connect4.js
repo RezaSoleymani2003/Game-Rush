@@ -81,7 +81,7 @@ socket.onclose = (event) => {
 };
 
 board.addEventListener("click", (e) => {
-    if (myTurn && e.target.classList.contains("cell") && e.target.textContent === "") {
+    if (myTurn && e.target.classList.contains("cell") && e.target.style.backgroundColor == "") {
         e.target.style.backgroundColor = color[playerSymbol];
 
         const index = e.target.dataset.index;  

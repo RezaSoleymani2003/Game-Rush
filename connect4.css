@@ -93,12 +93,13 @@ button:hover {
 .cell {
     width: 100%;
     aspect-ratio: 1 / 1; /* ✅ Keep squares */
-    background: white;
+    background-color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 
 
 .board div:hover {

@@ -3,15 +3,17 @@ import copy
 
 
 class Connect4:
-    
     def __init__(self):
         self.board = [['0' for i in range(7)] for j in range(6)]
-
 
     def update_board(self, symbol, i , j):
         self.board[i][j] = symbol
 
-    def check_winner(board):
+    def check_winner(self):
+        return self.__class__.check_winner_static(self.board)
+    
+    @staticmethod
+    def check_winner_static(board):        
         get_winner = {"XXXX" : "X", "OOOO" : "O"}
 
         for i in range(6):
@@ -47,106 +49,32 @@ class Connect4:
                     return val
               
         return "0"
-    
-    
 
-class Connect4_bot:
-    def __init__(self, level, connect4_game, symbol, max_depth=3):
-        self.level = level
-        self.connect4_game = connect4_game
-        self.symbol = symbol
-        self.apponent_symbol = 'O' if self.symbol == 'X' else 'X'
-        self.max_depth = max_depth
-
-
-    def get_empty_indexes(board):
+    def get_empty_indexes(self):
         empty_indexes = [
             (i, j) 
-            for i, row in enumerate(board)  
+            for i, row in enumerate(self.board)  
             for j, e in enumerate(row)  
             if e == '0'  
         ]
         return empty_indexes
-
-    def make_move(self):
-        move = ""
-        if self.level == "random":
-            move = self.random()
-
-        if self.level == "rule based":
-            move = self.rule_based() 
-
-        if self.level == "minimax":
-            move = self.minimax(self.connect4_game.board)
-
-        self.connect4_game.board[move[0]][move[1]] = self.symbol
-        return move
     
-    def random(self): 
-        empty_indexes = Connect4_bot.get_empty_indexes(self.connect4_game.board)
 
-        if empty_indexes:
-            random_index = random.choice(empty_indexes)
-            print("Random empty index:", random_index)
-        else:
-            print("No empty spaces left.")
+class Connect4_bot:
+    def __init__(self, connect4_game, symbol, max_depth=3):
+        self.connect4_game = connect4_game
+        self.symbol = symbol
+        self.opponent_symbol = 'O' if self.symbol == 'X' else 'X'
+        self.max_depth = max_depth
 
-        return random_index
-
-            
-    def rule_based(self):
+    def evaluate_board(self):
         board = self.connect4_game.board
 
-        empty_indexes = Connect4_bot.get_empty_indexes(board)
+        if self.connect4_game.check_winner() == self.symbol :
+            return 1000
+        elif self.connect4_game.check_winner() == self.opponent_symbol :
+            return 1000
 
-
-        for index in empty_indexes:
-            board_copy = copy.deepcopy(board)
-            board_copy[index[0]][index[1]] = self.symbol
-            
-            if Connect4.check_winner(board_copy) == self.symbol:
-                print(f"found : {index}")
-                return index
-
-        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]  
-        for row in range(6):
-            for col in range(7):
-                if board[row][col] == self.apponent_symbol:
-                    for dr, dc in directions:
-                        r1, c1 = row + dr, col + dc
-                        r2, c2 = row + 2 * dr, col + 2 * dc
-
-                        if 0 <= r1 < 6 and 0 <= c1 < 7 and board[r1][c1] == self.apponent_symbol:
-                            if 0 <= r2 < 6 and 0 <= c2 < 7 and board[r2][c2] == '0':
-                                return (r2, c2)
-
-        for index in empty_indexes:
-            board_copy = copy.deepcopy(board)
-            board_copy[index[0]][index[1]] = self.apponent_symbol
-            
-            if Connect4.check_winner(board_copy) == self.apponent_symbol:
-                print(f"found : {index}")
-                return index
-        
-        for index in empty_indexes:
-            x = index[0]
-            y = index[1]
-
-            adj_cells = [(x,y+1),(x+1,y),(x,y-1),(x-1,y),(x+1,y-1),(x-1,y+1),(x+1,y+1),(x-1,y-1)]
-
-            for cell in adj_cells:
-                try:
-                    if board[cell[0]][cell[1]] == self.apponent_symbol:
-                        return index
-
-                except:
-                    continue
-
-        random_index = random.choice(empty_indexes)
-        print(f"random : {random_index}")
-        return random_index
-        
-    def evaluate_board(self, board):
         score = 0
         def score_line(line):
             nonlocal score
@@ -183,23 +111,111 @@ class Connect4_bot:
 
         center_column = [board[row][3] for row in range(6)]
         score += center_column.count(self.symbol) * 3
-        score -= center_column.count(self.apponent_symbol) * 3
+        score -= center_column.count(self.opponent_symbol) * 3
         
         return score
 
+
+    def update_board(self, move):
+        self.connect4_game.board[move[0]][move[1]] = self.symbol
+    
+    def create_bot(level, connect4_game, symbol):
+        if level == "random":
+            return Connect4_random_bot(connect4_game, symbol)
+        
+        if level == "rule based":
+            return Connect4_rule_based_bot(connect4_game, symbol)
+
+        if level == "rl":
+            return Connect4_rl_bot(connect4_game, symbol)
+
+
+
+class Connect4_random_bot(Connect4_bot):
+    def make_move(self): 
+        
+        empty_indexes = self.connect4_game.get_empty_indexes()
+
+        if empty_indexes:
+            random_index = random.choice(empty_indexes)
+            print("Random empty index:", random_index)
+        else:
+            print("No empty spaces left.")
+
+        return random_index
+
+class Connect4_rule_based_bot(Connect4_bot):
+    def make_move(self):
+        board = self.connect4_game.board
+
+        empty_indexes = self.connect4_game.get_empty_indexes()
+        
+        print("here", flush=True)
+
+        for index in empty_indexes:
+            board_copy = copy.deepcopy(board)
+            board_copy[index[0]][index[1]] = self.symbol
+            
+            if Connect4.check_winner_static(board_copy) == self.symbol:
+                print(f"win found : {index}", flush=True)
+                return index
+        
+        for index in empty_indexes:
+            board_copy = copy.deepcopy(board)
+            board_copy[index[0]][index[1]] = self.opponent_symbol
+            
+            if Connect4.check_winner_static(board_copy) == self.opponent_symbol:
+                print(f"win prevention found : {index}", flush=True)
+                return index
+
+        
+        directions = [(0, 1), (1, 0), (1, 1), (1, -1)]  
+        for row in range(6):
+            for col in range(7):
+                if board[row][col] == self.opponent_symbol:
+                    for dr, dc in directions:
+                        r1, c1 = row + dr, col + dc
+                        r2, c2 = row + 2 * dr, col + 2 * dc
+
+                        if 0 <= r1 < 6 and 0 <= c1 < 7 and board[r1][c1] == self.opponent_symbol:
+                            if 0 <= r2 < 6 and 0 <= c2 < 7 and board[r2][c2] == '0':
+                                print("two adj oppnent found", flush=True)
+                                return (r2, c2)
+
+        
+        for index in empty_indexes:
+            x = index[0]
+            y = index[1]
+
+            adj_cells = [(x,y+1),(x+1,y),(x,y-1),(x-1,y),(x+1,y-1),(x-1,y+1),(x+1,y+1),(x-1,y-1)]
+
+            for cell in adj_cells:
+                try:
+                    if board[cell[0]][cell[1]] == self.opponent_symbol:
+                        print("empty adj found", flush=True)
+                        return index
+                except:
+                    continue
+
+        random_index = random.choice(empty_indexes)
+        print(f"random : {random_index}")
+        return random_index
+
+class Connect4_minimax_bot(Connect4_bot):
+    
+
     def get_best_score(self, board, symbol, alpha, beta, depth):
         winner = Connect4.check_winner(board)
-        
         if winner == self.symbol:  
             return 100
-        elif winner == self.apponent_symbol:  
+        elif winner == self.opponent_symbol:  
             return -100
-        elif not Connect4_bot.get_empty_indexes(board):
+        elif not self.connect4_game.get_empty_indexes():
             return 0
         elif depth == 0:  
             return self.evaluate_board(board)
 
-        empty_indexes = Connect4_bot.get_empty_indexes(board)
+        empty_indexes = self.connect4_game.get_empty_indexes()
 
         if symbol == self.symbol: 
             best_score = -float("inf")
@@ -207,7 +223,7 @@ class Connect4_bot:
                 board_copy = copy.deepcopy(board)
                 board_copy[index[0]][index[1]] = symbol  
 
-                score = self.get_best_score(board_copy, self.apponent_symbol, alpha, beta, depth - 1)
+                score = self.get_best_score(board_copy, self.opponent_symbol, alpha, beta, depth - 1)
                 best_score = max(best_score, score)
                 alpha = max(alpha, best_score)
 
@@ -231,15 +247,15 @@ class Connect4_bot:
 
             return best_score
 
-    def minimax(self, board):
+    def make_move(self, board):
         best_score = -float("inf")
         best_move = None
 
-        for index in Connect4_bot.get_empty_indexes(board):
+        for index in self.connect4_game.get_empty_indexes():
             board_copy = copy.deepcopy(board)
             board_copy[index[0]][index[1]] = self.symbol  
 
-            score = self.get_best_score(board_copy, self.apponent_symbol, -float("inf"), float("inf"), self.max_depth)
+            score = self.get_best_score(board_copy, self.opponent_symbol, -float("inf"), float("inf"), self.max_depth)
 
             if score > best_score:
                 best_score = score
@@ -247,15 +263,27 @@ class Connect4_bot:
 
         return best_move
 
+class Connect4_rl_bot(Connect4_bot):
 
-connect4 = Connect4()
+    def __init__(self,connect4_game, symbol):
+        super().__init__(connect4_game, symbol)
+        self.table = []
 
-connect4.board = [['O', 'O', 'X', 'O', 'X', 'O', 'X'],
-                  ['0', 'X', 'O', '0', 'X', 'X', 'O'], 
-                  ['O', '0', 'X', 'X', 'O', 'X', 'O'], 
-                  ['X', '0', 'O', 'X', '0', 'O', 'O'], 
-                  ['0', '0', 'X', 'O', 'O', 'X', 'X'], 
-                  ['0', 'O', '0', 'X', '0', '0', '0']]
-bot = Connect4_bot("minimax", connect4, "O")
-print(bot.make_move())
-print(Connect4.check_winner(connect4.board))
+
+    def train(self):
+        self.table = []
+
+    def make_move(self, board):
+        pass
+
+# connect4 = Connect4()
+
+# connect4.board = [['O', 'O', 'X', 'O', 'X', 'O', 'X'],
+#                   ['0', 'X', 'O', '0', 'X', 'X', 'O'], 
+#                   ['O', '0', 'X', 'X', 'O', 'X', 'O'], 
+#                   ['X', '0', 'O', 'X', '0', 'O', 'O'], 
+#                   ['0', '0', 'X', 'O', 'O', 'X', 'X'], 
+#                   ['0', 'O', '0', 'X', '0', '0', '0']]
+# bot = Connect4_bot("minimax", connect4, "O")
+# print(bot.make_move())
+# print(Connect4.check_winner(connect4.board))
