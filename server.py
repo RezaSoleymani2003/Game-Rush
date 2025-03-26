@@ -19,6 +19,9 @@ async def handle_connect4_ai_mode(player_ws):
                 if "level" in data:
                     level = data["level"]
 
+                    bot = None
+                    if level == "hard":
+                        bot = Connect4_rl_bot(connect4, "O")
                     bot = Connect4_bot.create_bot(mapper[level], connect4, "O")
                     # print(bot.symbol)
                     print(f"Bot initialized with difficulty: {level}", flush=True)
